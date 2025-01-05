@@ -3,11 +3,7 @@ FROM debian
 RUN apt update && apt install wget sudo tar -y
 ENV PORT=5408
 
-RUN adduser code-sandbox \
-  --disabled-password \
-  --no-create-home \
-  --gecos ""
-
+RUN adduser code-sandbox --disabled-password --gecos ""
 RUN echo "code-sandbox:code-sandbox" | chpasswd
 RUN echo "code-sandbox ALL=(ALL) PASSWD: ALL" > /etc/sudoers.d/code-sandbox
 
