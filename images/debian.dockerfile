@@ -1,11 +1,13 @@
 FROM debian
 
-RUN apt update && apt install wget sudo tar -y
-ENV PORT=5408
+ARG USER
+ENV USER=${USER:-code-sandbox}
 
-RUN adduser code-sandbox --disabled-password --gecos ""
-RUN echo "code-sandbox:code-sandbox" | chpasswd
-RUN echo "code-sandbox ALL=(ALL) PASSWD: ALL" > /etc/sudoers.d/code-sandbox
+RUN apt update && apt install wget sudo tar -y
+
+RUN adduser $USER --disabled-password --gecos ""
+RUN echo "$USER:$USER" | chpasswd
+RUN echo "$USER ALL=(ALL) PASSWD: ALL" > /etc/sudoers.d/$USER
 
 RUN mkdir code-server
 WORKDIR /code-server
@@ -14,8 +16,8 @@ RUN wget -O /tmp/code-server.tar.gz https://github.com/coder/code-server/release
 RUN tar xvf /tmp/code-server.tar.gz --strip-components 1
 
 RUN mkdir /sandbox
-RUN chown code-sandbox:code-sandbox /sandbox
-USER code-sandbox
+RUN chown $USER:$USER /sandbox
+USER $USER
 
-WORKDIR /home/code-sandbox
+WORKDIR /home/$USER
 ENTRYPOINT ["/code-server/bin/code-server", "--bind-addr=0.0.0.0", "--auth=none"]

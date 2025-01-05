@@ -1,0 +1,12 @@
+name: code-sandbox
+
+services:
+  sandbox:
+    build:
+      context: images
+      dockerfile: $IMAGE.dockerfile
+      args:
+        USER: ${USER:-code-sandbox}
+    hostname: ${HOSTNAME:-code-sandbox}
+    ports:
+      - 5408:80
